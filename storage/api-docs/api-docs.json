@@ -1,0 +1,496 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "TODOリスト",
+        "description": "LaravelでのAPI仕様",
+        "contact": {
+            "email": "colycao.work@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://clara-coly-todo.herokuapp.com/api",
+            "description": "LaravelアプリケーションのAPIがSwagger/OpenAPIドキュメント"
+        }
+    ],
+    "paths": {
+        "/todos": {
+            "get": {
+                "tags": [
+                    "TODO"
+                ],
+                "summary": "登録されているTODOを一覧で表示する",
+                "operationId": "todoAll",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "ペジネーション中に何番目ページ",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "一覧で表示済み",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TodoListResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "TODO"
+                ],
+                "summary": "TODO（やること）を登録する",
+                "operationId": "todoCreate",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TodoStoreRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "登録済み",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TodoShowResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            }
+        },
+        "/todos/{id}": {
+            "get": {
+                "tags": [
+                    "TODO"
+                ],
+                "summary": "登録したTODOを表示する",
+                "operationId": "todoGet",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "指定されたIDに基づいてTODOを表示する",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "表示済み",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TodoShowResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "TODO"
+                ],
+                "summary": "登録したTODOを変更する",
+                "operationId": "todoUpdate",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "指定されたIDに基づいてTODOを変更する",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TodoStoreRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "変更済み",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TodoShowResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "TODO"
+                ],
+                "summary": "登録したTODOを削除する",
+                "operationId": "todoDelete",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "指定されたIDに基づいてTODOを削除する",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "410": {
+                        "description": "削除済み",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TodoDeleteResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            }
+        },
+        "/todos/{id}/complete": {
+            "put": {
+                "tags": [
+                    "TODO"
+                ],
+                "summary": "登録したTODOの完了状態をメモする",
+                "operationId": "todoComplete",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "指定されたIDに基づいてTODOの完了状態をメモする",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "完了済み",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TodoShowResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "TodoDeleteResponse": {
+                "title": "TODO事項の削除",
+                "description": "TODO事項を削除する",
+                "properties": {
+                    "success": {
+                        "title": "成功？",
+                        "description": "1は成功、0はエラーが発生",
+                        "type": "int",
+                        "example": 1
+                    },
+                    "message": {
+                        "title": "メッセージ",
+                        "description": "サーバーからメッセージ",
+                        "type": "string",
+                        "example": "TODOを削除しました。"
+                    },
+                    "status_code": {
+                        "title": "SUCCESS",
+                        "description": "状態コード",
+                        "type": "int",
+                        "example": 200
+                    }
+                },
+                "type": "object"
+            },
+            "TodoListResponse": {
+                "title": "TODO事項の一覧",
+                "description": "TODO事項を一覧で表示する",
+                "properties": {
+                    "success": {
+                        "title": "成功？",
+                        "description": "1は成功、0はエラーが発生",
+                        "type": "int",
+                        "example": 1
+                    },
+                    "message": {
+                        "title": "メッセージ",
+                        "description": "サーバーからメッセージ",
+                        "type": "string",
+                        "example": "TODOを一覧で表示しました。"
+                    },
+                    "status_code": {
+                        "title": "SUCCESS",
+                        "description": "状態コード",
+                        "type": "int",
+                        "example": 200
+                    },
+                    "data": {
+                        "title": "データ",
+                        "description": "TODOを一覧データ",
+                        "properties": {
+                            "current_page": {
+                                "type": "int",
+                                "example": "1"
+                            },
+                            "data": {
+                                "type": "array",
+                                "items": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "int",
+                                            "example": "1"
+                                        },
+                                        "title": {
+                                            "type": "string",
+                                            "example": "アプリクローズドテスト"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "テスト版リリースを作成、管理し、限られた数のテスターでアプリのプレリリース版をテストできます。"
+                                        },
+                                        "due_date": {
+                                            "description": "TODO事項の締め切り日（日付フォーマット2022-09-25）",
+                                            "type": "string",
+                                            "example": "2022-08-25"
+                                        },
+                                        "is_completed": {
+                                            "description": "TODO事項の状態は完了しましたか（0は未完成、1は完了済み）",
+                                            "type": "int",
+                                            "example": 0
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "example": "2022-08-21 21:13:45"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "example": "2022-08-21 21:13:45"
+                                        },
+                                        "deleted_at": {
+                                            "type": "string",
+                                            "example": null
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "first_page_url": {
+                                "type": "string",
+                                "example": "http://127.0.0.1:8000/api/todos?page=1"
+                            },
+                            "from": {
+                                "type": "int",
+                                "example": "1"
+                            },
+                            "next_page_url": {
+                                "type": "string",
+                                "example": "http://127.0.0.1:8000/api/todos?page=2"
+                            },
+                            "path": {
+                                "type": "string",
+                                "example": "http://127.0.0.1:8000/api/todos"
+                            },
+                            "per_page": {
+                                "type": "int",
+                                "example": "10"
+                            },
+                            "prev_page_url": {
+                                "type": "string",
+                                "example": null
+                            },
+                            "to": {
+                                "type": "int",
+                                "example": "10"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "TodoShowResponse": {
+                "title": "TODO事項の表示",
+                "description": "TODO事項を表示する",
+                "properties": {
+                    "success": {
+                        "title": "成功？",
+                        "description": "1は成功、0はエラーが発生",
+                        "type": "int",
+                        "example": 1
+                    },
+                    "message": {
+                        "title": "メッセージ",
+                        "description": "サーバーからメッセージ",
+                        "type": "string",
+                        "example": "TODOを表示しました。"
+                    },
+                    "status_code": {
+                        "title": "SUCCESS",
+                        "description": "状態コード",
+                        "type": "int",
+                        "example": 200
+                    },
+                    "data": {
+                        "title": "データ",
+                        "description": "TODO詳細情報",
+                        "properties": {
+                            "id": {
+                                "type": "int",
+                                "example": "1"
+                            },
+                            "title": {
+                                "type": "string",
+                                "example": "アプリクローズドテスト"
+                            },
+                            "description": {
+                                "type": "string",
+                                "example": "テスト版リリースを作成、管理し、限られた数のテスターでアプリのプレリリース版をテストできます。"
+                            },
+                            "due_date": {
+                                "description": "TODO事項の締め切り日（日付フォーマット2022-09-25）",
+                                "type": "string",
+                                "example": "2022-08-25"
+                            },
+                            "is_completed": {
+                                "description": "TODO事項の状態は完了しましたか（0は未完成、1は完了済み）",
+                                "type": "int",
+                                "example": 0
+                            },
+                            "created_at": {
+                                "type": "string",
+                                "example": "2022-08-21 21:13:45"
+                            },
+                            "updated_at": {
+                                "type": "string",
+                                "example": "2022-08-21 21:13:45"
+                            },
+                            "deleted_at": {
+                                "type": "string",
+                                "example": null
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "TodoStoreRequest": {
+                "title": "TODO事項の登録",
+                "description": "TODO事項を登録する",
+                "properties": {
+                    "title": {
+                        "title": "タイトル",
+                        "description": "TODO事項",
+                        "type": "string",
+                        "example": "アプリクローズドテスト"
+                    },
+                    "description": {
+                        "title": "内容",
+                        "description": "TODO事項の具体的な内容",
+                        "type": "string",
+                        "example": "クローズド テスト版リリースを作成、管理し、限られた数のテスターでアプリのプレリリース版をテストできます。"
+                    },
+                    "due_date": {
+                        "title": "締め切り日",
+                        "description": "TODO事項の締め切り日（日付フォーマット2022-09-25）",
+                        "type": "string",
+                        "format": "date",
+                        "example": "2022-09-25"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "X-APP-ID": {
+                "type": "apiKey",
+                "name": "X-APP-ID",
+                "in": "header"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "TODOリスト",
+            "description": "やるべき作業を書き出したリストのこと"
+        }
+    ],
+    "security": [
+        []
+    ]
+}
